@@ -192,6 +192,14 @@ Kubernetes resources to exclude, formatted as resource.group, such as storagecla
 
 * Resources with the label `velero.io/exclude-from-backup=true` are not included in backup, even if it contains a matching selector label.
 
+### Exclude PVC (Persistent Volume Claims)
+
+* The label `velero.io/exclude-from-backup=true` does not work for PVCs, so in order to exclude them you have to create an annotation on the pod, like this: `backup.velero.io/backup-volumes-excludes=YOUR_VOLUME_NAME_1,YOUR_VOLUME_NAME_2,...`
+
+  ```bash
+  kubectl -n sample annotate pod/<pod name> backup.velero.io/backup-volumes-excludes=<comma separated list of volume names>
+  ```
+
 ### --exclude-cluster-scoped-resources
 Kubernetes cluster-scoped resources to exclude from the backup, formatted as resource.group, such as `storageclasses.storage.k8s.io`(use '*' for all resources). Cannot work with `--include-resources`, `--exclude-resources` and `--include-cluster-resources`. This parameter only works for backup, not for restore.
 
